@@ -1,0 +1,1 @@
+alert("onload event - alert loaded from js");
