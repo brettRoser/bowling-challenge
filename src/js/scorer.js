@@ -6,9 +6,9 @@
 //     });
 // });
 
-$('document').ready(function() {
-    $('.printBtn').click(function() {
-        console.log('disabling print button');
-        $(this).attr('disabled', true);
-    });
-});
+$('document').ready(function () {
+  $('.printBtn').click(function () {
+    console.log('disabling print button')
+    $(this).attr('disabled', true)
+  })
+})

@@ -1,0 +1,33 @@
+{
+  "name": "bowling-challenge",
+  "version": "1.0.0",
+  "description": "App to score a game of bowling for 1-5 players",
+  "main": "scorer.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.28.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brettRoser/bowling-challenge.git"
+  },
+  "keywords": [
+    "bowling"
+  ],
+  "author": "Brett Roser",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brettRoser/bowling-challenge/issues"
+  },
+  "homepage": "https://github.com/brettRoser/bowling-challenge#readme"
+}
