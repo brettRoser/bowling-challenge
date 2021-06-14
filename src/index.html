@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="css/scorecard.css">
     </head>
     <body>
-        <center><h3>Bowling scorecard</h3></center> <!-- TODO: Enforce center through css -->
+        <h3 class="center">Bowling scorecard</h3>
         <label for="bowlers">Number of bowlers</label>
         <select name="bowlers" id="bowlers">
             <option value="1">1</option>
@@ -12,11 +12,7 @@
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
         </select>
-
         <br /><br />
         <table>
             <tr>
@@ -35,7 +31,7 @@
             </tr>
             <tr>
                 <td rowspan="2">
-                    <input type="text" id="playerName" name="playerName" maxlength="20" size="13" style="height:40px;font-size:18px;text-align:center;" autofocus />
+                    <input type="text" class="playerName center" id="playerName" name="playerName" maxlength="20" size="13" autofocus />
                 </td>
                 <td>
                     <input class="scores" type="text" id="f1b1" name="f1b1" maxlength="1" size="1"/>
@@ -78,19 +74,19 @@
                     <input class="scores" type="text" id="f10b2" name="f10b2" maxlength="1" size="1"/>
                     <input class="scores" type="text" id="f10b3" name="f10b3" maxlength="1" size="1"/>
                 </td>
-                <td rowspan="2"><center><label>169</label></center></td>
+                <td rowspan="2" class="center"><label>169</label></td>
             </tr>
             <tr>
-                <td><center><label>14</label></center></td>
-                <td><center><label>23</label></center></td>
-                <td><center><label>43</label></center></td>
-                <td><center><label>63</label></center></td>
-                <td><center><label>83</label></center></td>
-                <td><center><label>101</label></center></td>
-                <td><center><label>109</label></center></td>
-                <td><center><label>129</label></center></td>
-                <td><center><label>149</label></center></td>
-                <td><center><label>169</label></center></td>
+                <td class="center"><label>14</label></td>
+                <td class="center"><label>23</label></td>
+                <td class="center"><label>43</label></td>
+                <td class="center"><label>63</label></td>
+                <td class="center"><label>83</label></td>
+                <td class="center"><label>101</label></td>
+                <td class="center"><label>109</label></td>
+                <td class="center"><label>129</label></td>
+                <td class="center"><label>149</label></td>
+                <td class="center"><label>169</label></td>
             </tr>
         </table>
     </body>

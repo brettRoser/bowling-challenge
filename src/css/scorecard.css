@@ -6,3 +6,10 @@ table, th, td {
     width:20px;
     margin: 1px;
 }
+.center {
+    text-align: center;
+}
+.playerName {
+    height:40px;
+    font-size:18px;
+}
