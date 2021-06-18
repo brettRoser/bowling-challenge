@@ -13,3 +13,6 @@ table, th, td {
     height:40px;
     font-size:18px;
 }
+.printLink {
+    padding-left: 10px;
+}
