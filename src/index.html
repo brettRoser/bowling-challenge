@@ -19,80 +19,82 @@
             <img src="img/printer.png" alt="Print" id="printImg" width="30" height="30" />
         </a>
         <br /><br />
-        <table>
-            <tr>
-                <th>Player Name</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>5</th>
-                <th>6</th>
-                <th>7</th>
-                <th>8</th>
-                <th>9</th>
-                <th>10</th>
-                <th>Total Score</th>
-            </tr>
-            <tr>
-                <td rowspan="2">
-                    <input type="text" class="playerName center" id="playerName" name="playerName" maxlength="20" size="13" autofocus />
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f1b1" name="f1b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f1b2" name="f1b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f2b1" name="f2b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f2b2" name="f2b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f3b1" name="f3b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f3b2" name="f3b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f4b1" name="f4b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f4b2" name="f4b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f5b1" name="f5b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f5b2" name="f5b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f6b1" name="f6b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f6b2" name="f6b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f7b1" name="f7b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f7b2" name="f7b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f8b1" name="f8b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f8b2" name="f8b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f9b1" name="f9b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f9b2" name="f9b2" maxlength="1" size="1"/>
-                </td>
-                <td>
-                    <input class="scores" type="text" id="f10b1" name="f10b1" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f10b2" name="f10b2" maxlength="1" size="1"/>
-                    <input class="scores" type="text" id="f10b3" name="f10b3" maxlength="1" size="1"/>
-                </td>
-                <td rowspan="2" class="center"><label>169</label></td>
-            </tr>
-            <tr>
-                <td class="center"><label>14</label></td>
-                <td class="center"><label>23</label></td>
-                <td class="center"><label>43</label></td>
-                <td class="center"><label>63</label></td>
-                <td class="center"><label>83</label></td>
-                <td class="center"><label>101</label></td>
-                <td class="center"><label>109</label></td>
-                <td class="center"><label>129</label></td>
-                <td class="center"><label>149</label></td>
-                <td class="center"><label>169</label></td>
-            </tr>
-        </table>
+        <div id="scorecard">
+            <table>
+                <tr>
+                    <th>Player Name</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>Total Score</th>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <input type="text" class="playerName center" id="playerName" name="playerName" maxlength="20" size="13" autofocus />
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f1b1" name="f1b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f1b2" name="f1b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f2b1" name="f2b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f2b2" name="f2b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f3b1" name="f3b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f3b2" name="f3b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f4b1" name="f4b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f4b2" name="f4b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f5b1" name="f5b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f5b2" name="f5b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f6b1" name="f6b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f6b2" name="f6b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f7b1" name="f7b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f7b2" name="f7b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f8b1" name="f8b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f8b2" name="f8b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f9b1" name="f9b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f9b2" name="f9b2" maxlength="1" size="1"/>
+                    </td>
+                    <td>
+                        <input class="scores" type="text" id="f10b1" name="f10b1" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f10b2" name="f10b2" maxlength="1" size="1"/>
+                        <input class="scores" type="text" id="f10b3" name="f10b3" maxlength="1" size="1"/>
+                    </td>
+                    <td rowspan="2" class="center"><label>169</label></td>
+                </tr>
+                <tr>
+                    <td class="center"><label>14</label></td>
+                    <td class="center"><label>23</label></td>
+                    <td class="center"><label>43</label></td>
+                    <td class="center"><label>63</label></td>
+                    <td class="center"><label>83</label></td>
+                    <td class="center"><label>101</label></td>
+                    <td class="center"><label>109</label></td>
+                    <td class="center"><label>129</label></td>
+                    <td class="center"><label>149</label></td>
+                    <td class="center"><label>169</label></td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>
