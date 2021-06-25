@@ -27,3 +27,8 @@ function removeGamesFromScorecard (numberOfBowlers, currentGameCount) {
     document.getElementsByTagName('table')[i - 1].remove()
   }
 }
+
+function clearScorecard () {
+  const scorecard = document.getElementById('scorecard')
+  $(scorecard).find('input').val('')
+}
