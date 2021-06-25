@@ -17,3 +17,10 @@ table, th, td {
     padding-left: 10px;
     padding-right: 5px;
 }
+.frameScore {
+    width: 50px;
+    height: 20px;
+}
+.lastFrameScore {
+    width: 75px;
+}
