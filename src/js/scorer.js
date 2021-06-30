@@ -13,11 +13,12 @@ $('document').ready(function () {
 })
 
 function addGamesToScorecard (numberOfBowlers, currentGameCount, scorecard) {
+  const initialGame = document.getElementsByTagName('table')[0]
   for (let i = currentGameCount; i < numberOfBowlers; i++) {
-    const initialGame = document.getElementsByTagName('table')[0]
-
     const initialGameClone = initialGame.cloneNode(true)
     $(initialGameClone).find('input').val('')
+    $(initialGameClone).removeClass('game1').addClass('game' + (i + 1))
+
     scorecard.appendChild(initialGameClone)
   }
 }
