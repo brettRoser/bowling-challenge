@@ -42,6 +42,8 @@ function identifyScoreChangeEvent () {
 }
 
 function clearScorecard () {
-  const scorecard = document.getElementById('scorecard')
-  $(scorecard).find('input').val('')
+  if (window.confirm('Are you sure you want to clear the scorecard?')) {
+    const scorecard = document.getElementById('scorecard')
+    $(scorecard).find('input').val('')
+  }
 }
