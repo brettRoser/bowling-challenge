@@ -24,3 +24,8 @@ table, th, td {
 .lastFrameScore {
     width: 75px;
 }
+/* Add page sizing and margins for printing */
+@page {
+    size: 25cm 35.7cm;
+    margin: 5mm 5mm 5mm 5mm;
+}
