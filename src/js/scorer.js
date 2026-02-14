@@ -1,4 +1,4 @@
-$('document').ready(function () {
+$(document).ready(function () {
   updatePlayerCountForScorecardEvent()
   // ensure the initial table inputs receive unique IDs/names
   normalizeScorecardIds()
@@ -7,33 +7,33 @@ $('document').ready(function () {
 
 function updatePlayerCountForScorecardEvent () {
   $('#bowlers').change(function () {
-    const scorecard = document.getElementById('scorecard')
-    const numberOfBowlers = document.getElementById('bowlers').value
-    const currentGameCount = scorecard.getElementsByTagName('table').length
+    const $scorecard = $('#scorecard')
+    const numberOfBowlers = parseInt($('#bowlers').val(), 10)
+    const currentGameCount = $scorecard.find('table').length
 
     if (currentGameCount <= numberOfBowlers) {
-      addGamesToScorecard(numberOfBowlers, currentGameCount, scorecard)
+      addGamesToScorecard(numberOfBowlers, currentGameCount, $scorecard)
     } else {
-      removeGamesFromScorecard(numberOfBowlers, currentGameCount)
+      removeGamesFromScorecard(numberOfBowlers, $scorecard)
     }
   })
 }
 
-function addGamesToScorecard (numberOfBowlers, currentGameCount, scorecard) {
-  const initialGame = document.getElementsByTagName('table')[0]
+function addGamesToScorecard (numberOfBowlers, currentGameCount, $scorecard) {
+  const $initialGame = $scorecard.find('table').first()
   for (let i = currentGameCount; i < numberOfBowlers; i++) {
-    const initialGameClone = $(initialGame).clone(true, true)
+    const $initialGameClone = $initialGame.clone(true, true)
     // clear inputs and ensure none are disabled from cloned state
-    $(initialGameClone).find('input').val('').prop('disabled', false)
+    $initialGameClone.find('input').val('').prop('disabled', false)
     // clear any frame/total labels that were cloned
-    $(initialGameClone).find('td.frameScore label, td.lastFrameScore label, td[rowspan="2"].center label').text('')
-    $(initialGameClone).removeClass('game1').addClass('game' + (i + 1))
-    $(scorecard).append(initialGameClone)
+    $initialGameClone.find('td.frameScore label, td.lastFrameScore label, td[rowspan="2"].center label').text('')
+    $initialGameClone.removeClass('game1').addClass('game' + (i + 1))
+    $scorecard.append($initialGameClone)
   }
 
   // After adding/removing tables, normalize IDs and names so each input is unique per player
   normalizeScorecardIds()
-  }
+}
 
 function normalizeScorecardIds () {
   const tables = $('#scorecard').find('table')
@@ -57,9 +57,10 @@ function normalizeScorecardIds () {
   })
 }
 
-function removeGamesFromScorecard (numberOfBowlers, currentGameCount) {
-  for (let i = currentGameCount; i > numberOfBowlers; i--) {
-    document.getElementsByTagName('table')[i - 1].remove()
+function removeGamesFromScorecard (numberOfBowlers, $scorecard) {
+  const $tables = $scorecard.find('table')
+  for (let i = $tables.length; i > numberOfBowlers; i--) {
+    $tables.eq(i - 1).remove()
   }
   normalizeScorecardIds()
 }
@@ -73,13 +74,33 @@ function identifyScoreChangeEvent () {
   })
 }
 
+// Helper function to build input selector by frame and ball number
+function getInputSelector (frame, ball) {
+  return 'input[id^="f' + frame + 'b' + ball + '"]'
+}
+
+// Helper function to convert raw input string to pins value
+function rawToPins (raw, prevRaw = null) {
+  const val = (raw || '').toString().trim()
+  if (val === '') return null
+  if (val === '-') return 0
+  if (val.toUpperCase() === 'X') return 10
+  if (val === '/') {
+    if (prevRaw === null) return null
+    const prev = rawToPins(prevRaw, null)
+    if (prev === null) return null
+    return Math.max(0, 10 - prev)
+  }
+  const n = parseInt(val, 10)
+  return Number.isFinite(n) ? n : null
+}
+
 // Compute scores for a given player table
 function computeScoresForTable ($table) {
-  const frameScores = []
   let cumulative = 0
 
   function getBallPins (frame, ball) {
-    const $input = $table.find('input[id^="f' + frame + 'b' + ball + '"]')
+    const $input = $table.find(getInputSelector(frame, ball))
     if (!$input.length) return null
     const raw = ($input.val() || '').toString().trim()
     if (raw === '') return null
@@ -127,7 +148,7 @@ function computeScoresForTable ($table) {
       if (next.length === 2) frameTotal = 10 + next[0] + next[1]
     } else if (frame < 10) {
       // spare
-      if (b1 !== null && b2 !== null && (b1 + b2 === 10 || ($table.find('input[id^="f' + frame + 'b2"]').val() === '/'))) {
+      if (b1 !== null && b2 !== null && (b1 + b2 === 10 || ($table.find(getInputSelector(frame, 2)).val() === '/'))) {
         const next = getNextThrows(frame, 1)
         if (next.length === 1) frameTotal = 10 + next[0]
       } else if (b1 !== null && b2 !== null) {
@@ -153,7 +174,6 @@ function computeScoresForTable ($table) {
 
     if (frameTotal !== null) {
       cumulative += frameTotal
-      frameScores.push(frameTotal)
       // show cumulative score up to this frame
       $scoreCell.find('label').text(cumulative)
     } else {
@@ -191,7 +211,7 @@ $(document).on('input blur', '#scorecard .scores', function (e) {
 
     // validate second-ball input: highlight when first+second > 10 for frames < 10
     if (ball === 2) {
-      const firstRaw = ($table.find('input[id^="f' + frame + 'b1"]').val() || '').toString().trim()
+      const firstRaw = ($table.find(getInputSelector(frame, 1)).val() || '').toString().trim()
       const valid2 = isValidSecondBall(val, firstRaw, frame)
       if (!valid2) {
         $input.css('border', '2px solid #c00')
@@ -204,25 +224,11 @@ $(document).on('input blur', '#scorecard .scores', function (e) {
 
     // special handling for 10th frame: control enabling of 2nd/3rd balls
     if (frame === 10) {
-      const $b1 = $table.find('input[id^="f10b1"]')
-      const $b2 = $table.find('input[id^="f10b2"]')
-      const $b3 = $table.find('input[id^="f10b3"]')
+      const $b1 = $table.find(getInputSelector(10, 1))
+      const $b2 = $table.find(getInputSelector(10, 2))
+      const $b3 = $table.find(getInputSelector(10, 3))
       const v1 = ($b1.val() || '').toString().trim()
       const v2 = ($b2.val() || '').toString().trim()
-
-      function rawToPins (raw, prevRaw) {
-        if (!raw) return null
-        if (raw === '-') return 0
-        if (raw.toUpperCase() === 'X') return 10
-        if (raw === '/') {
-          if (!prevRaw) return null
-          const prev = rawToPins(prevRaw, null)
-          if (prev === null) return null
-          return Math.max(0, 10 - prev)
-        }
-        const n = parseInt(raw, 10)
-        return Number.isFinite(n) ? n : null
-      }
 
       if (ball === 1) {
         // after entering first ball in 10th: if strike enable b2 and b3, else enable b2 and disable b3
@@ -236,7 +242,7 @@ $(document).on('input blur', '#scorecard .scores', function (e) {
       }
 
       if (ball === 2) {
-        const firstPins = rawToPins(v1, null)
+        const firstPins = rawToPins(v1)
         const secondPins = rawToPins(v2, v1)
 
         if (v1.toUpperCase() === 'X' || v1 === '10') {
@@ -260,7 +266,7 @@ $(document).on('input blur', '#scorecard .scores', function (e) {
 
     // if first ball is a strike in frames 1-9, disable second ball
     if (ball === 1 && frame < 10) {
-      const $second = $table.find('input[id^="f' + frame + 'b2"]')
+      const $second = $table.find(getInputSelector(frame, 2))
       if (val.toUpperCase() === 'X' || val === '10') {
         $second.val('').prop('disabled', true)
       } else {
