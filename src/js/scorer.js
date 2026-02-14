@@ -1,14 +1,18 @@
-$(document).ready(function () {
-  updatePlayerCountForScorecardEvent()
-  // ensure the initial table inputs receive unique IDs/names
-  normalizeScorecardIds()
-  identifyScoreChangeEvent()
-})
+/* global window document $ jQuery */
+// Only initialize event listeners when in a browser environment
+if (typeof window !== 'undefined' && typeof jQuery !== 'undefined') {
+  $(document).ready(function () {
+    updatePlayerCountForScorecardEvent()
+    // ensure the initial table inputs receive unique IDs/names
+    normalizeScorecardIds()
+    identifyScoreChangeEvent()
+  })
+}
 
 function updatePlayerCountForScorecardEvent () {
   $('#bowlers').change(function () {
     const $scorecard = $('#scorecard')
-    const numberOfBowlers = parseInt($('#bowlers').val(), 10)
+    const numberOfBowlers = parseInt(String($('#bowlers').val() || '0'), 10)
     const currentGameCount = $scorecard.find('table').length
 
     if (currentGameCount <= numberOfBowlers) {
@@ -186,109 +190,118 @@ function computeScoresForTable ($table) {
   $totalLabel.text(cumulative || '')
 }
 
-// Hook input/blur to compute scores and disable second ball on strike
-$(document).on('input blur', '#scorecard .scores', function (e) {
-  const $input = $(this)
-  const $table = $input.closest('table')
-  const id = ($input.attr('id') || '')
-  const m = id.match(/^f(\d+)b(\d+)/)
-  if (m) {
-    const frame = parseInt(m[1], 10)
-    const ball = parseInt(m[2], 10)
-    const val = ($input.val() || '').toString().trim()
+// Only bind event handlers when in a browser environment
+if (typeof window !== 'undefined' && typeof jQuery !== 'undefined') {
+  // Hook input/blur to compute scores and disable second ball on strike
+  $(document).on('input blur', '#scorecard .scores', function (e) {
+    const $input = $(this)
+    const $table = $input.closest('table')
+    const id = ($input.attr('id') || '')
+    const m = id.match(/^f(\d+)b(\d+)/)
+    if (m) {
+      const frame = parseInt(m[1], 10)
+      const ball = parseInt(m[2], 10)
+      let val = ($input.val() || '').toString().trim()
 
-    // validate first-ball inputs: '/' is invalid, numbers must be 0-10, 'X' is allowed
-    if (ball === 1) {
-      const valid = isValidFirstBall(val)
-      if (!valid) {
-        $input.css('border', '2px solid #c00')
-        $input.attr('title', "Invalid first-ball entry. Use digits, '-', or 'X'.")
-      } else {
-        $input.css('border', '')
-        $input.removeAttr('title')
+      // normalize explicit 0 to dash (user-visible miss) so users cannot enter '0'
+      if (val === '0') {
+        $input.val('-')
+        val = '-'
       }
-    }
 
-    // validate second-ball input: highlight when first+second > 10 for frames < 10
-    if (ball === 2) {
-      const firstRaw = ($table.find(getInputSelector(frame, 1)).val() || '').toString().trim()
-      const valid2 = isValidSecondBall(val, firstRaw, frame)
-      if (!valid2) {
-        $input.css('border', '2px solid #c00')
-        $input.attr('title', 'Invalid second-ball entry; total for frame cannot exceed 10.')
-      } else {
-        $input.css('border', '')
-        $input.removeAttr('title')
-      }
-    }
-
-    // special handling for 10th frame: control enabling of 2nd/3rd balls
-    if (frame === 10) {
-      const $b1 = $table.find(getInputSelector(10, 1))
-      const $b2 = $table.find(getInputSelector(10, 2))
-      const $b3 = $table.find(getInputSelector(10, 3))
-      const v1 = ($b1.val() || '').toString().trim()
-      const v2 = ($b2.val() || '').toString().trim()
-
+      // validate first-ball inputs: '/' is invalid, numbers must be 0-10, 'X' is allowed
       if (ball === 1) {
-        // after entering first ball in 10th: if strike enable b2 and b3, else enable b2 and disable b3
-        if (val.toUpperCase() === 'X' || val === '10') {
-          $b2.prop('disabled', false)
-          $b3.prop('disabled', false)
+        const valid = isValidFirstBall(val)
+        if (!valid) {
+          $input.css('border', '2px solid #c00')
+          $input.attr('title', "Invalid first-ball entry. Use digits, '-', or 'X'.")
         } else {
-          $b2.prop('disabled', false)
-          $b3.val('').prop('disabled', true)
+          $input.css('border', '')
+          $input.removeAttr('title')
         }
       }
 
+      // validate second-ball input: highlight when first+second > 10 for frames < 10
       if (ball === 2) {
-        const firstPins = rawToPins(v1)
-        const secondPins = rawToPins(v2, v1)
-
-        if (v1.toUpperCase() === 'X' || v1 === '10') {
-          // first was strike -> second can be anything; enable third only when second is present
-          if (v2 !== '') {
-            $b3.prop('disabled', false)
-          } else {
-            $b3.val('').prop('disabled', true)
-          }
+        const firstRaw = ($table.find(getInputSelector(frame, 1)).val() || '').toString().trim()
+        const valid2 = isValidSecondBall(val, firstRaw, frame)
+        if (!valid2) {
+          $input.css('border', '2px solid #c00')
+          $input.attr('title', 'Invalid second-ball entry; total for frame cannot exceed 10.')
         } else {
-          // if first+second is spare, enable third; otherwise disable third
-          const isSpare = (v2 === '/') || (firstPins !== null && secondPins !== null && firstPins + secondPins === 10)
-          if (isSpare) {
+          $input.css('border', '')
+          $input.removeAttr('title')
+        }
+      }
+
+      // special handling for 10th frame: control enabling of 2nd/3rd balls
+      if (frame === 10) {
+        const $b1 = $table.find(getInputSelector(10, 1))
+        const $b2 = $table.find(getInputSelector(10, 2))
+        const $b3 = $table.find(getInputSelector(10, 3))
+        const v1 = ($b1.val() || '').toString().trim()
+        const v2 = ($b2.val() || '').toString().trim()
+
+        if (ball === 1) {
+          // after entering first ball in 10th: if strike enable b2 and b3, else enable b2 and disable b3
+          if (val.toUpperCase() === 'X' || val === '10') {
+            $b2.prop('disabled', false)
             $b3.prop('disabled', false)
           } else {
+            $b2.prop('disabled', false)
             $b3.val('').prop('disabled', true)
+          }
+        }
+
+        if (ball === 2) {
+          const firstPins = rawToPins(v1)
+          const secondPins = rawToPins(v2, v1)
+
+          if (v1.toUpperCase() === 'X' || v1 === '10') {
+            // first was strike -> second can be anything; enable third only when second is present
+            if (v2 !== '') {
+              $b3.prop('disabled', false)
+            } else {
+              $b3.val('').prop('disabled', true)
+            }
+          } else {
+            // if first+second is spare, enable third; otherwise disable third
+            const isSpare = (v2 === '/') || (firstPins !== null && secondPins !== null && firstPins + secondPins === 10)
+            if (isSpare) {
+              $b3.prop('disabled', false)
+            } else {
+              $b3.val('').prop('disabled', true)
+            }
+          }
+        }
+      }
+
+      // if first ball is a strike in frames 1-9, disable second ball
+      if (ball === 1 && frame < 10) {
+        const $second = $table.find(getInputSelector(frame, 2))
+        if (val.toUpperCase() === 'X' || val === '10') {
+          $second.val('').prop('disabled', true)
+        } else {
+          $second.prop('disabled', false)
+        }
+      }
+
+      // auto-tab to next enabled input on entry (input event)
+      if (e.type === 'input') {
+        const rawVal = val
+        if (rawVal !== '') {
+          const $enabled = $table.find('input.scores:enabled')
+          const idx = $enabled.index($input)
+          if (idx >= 0 && idx < $enabled.length - 1) {
+            $enabled.eq(idx + 1).focus().select()
           }
         }
       }
     }
 
-    // if first ball is a strike in frames 1-9, disable second ball
-    if (ball === 1 && frame < 10) {
-      const $second = $table.find(getInputSelector(frame, 2))
-      if (val.toUpperCase() === 'X' || val === '10') {
-        $second.val('').prop('disabled', true)
-      } else {
-        $second.prop('disabled', false)
-      }
-    }
-
-    // auto-tab to next enabled input on entry (input event)
-    if (e.type === 'input') {
-      const rawVal = val
-      if (rawVal !== '') {
-        const $enabled = $table.find('input.scores:enabled')
-        const idx = $enabled.index($input)
-        if (idx >= 0 && idx < $enabled.length - 1) {
-          $enabled.eq(idx + 1).focus().select()
-        }
-      }
-    }
-  }
-
-  computeScoresForTable($table)
-})
+    computeScoresForTable($table)
+  })
+}
 
 function isValidFirstBall (raw) {
   const val = (raw || '').toString().trim()
@@ -345,5 +358,16 @@ function clearScorecard () {
     $scorecard.find('input').val('').prop('disabled', false)
     // clear cumulative/frame labels and total labels
     $scorecard.find('td.frameScore label, td.lastFrameScore label, td[rowspan="2"].center label').text('')
+  }
+}
+
+// Export functions for testing (Node.js/Jest environment)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    rawToPins,
+    getInputSelector,
+    isValidFirstBall,
+    isValidSecondBall,
+    clearScorecard
   }
 }
