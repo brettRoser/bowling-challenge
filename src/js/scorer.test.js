@@ -207,4 +207,26 @@ describe('isValidSecondBall', () => {
       expect(isValidSecondBall('  /  ', '  5  ', 1)).toBe(true)
     })
   })
+
+  describe('spare normalization', () => {
+    test('should convert numeric second ball to "/" when sum equals 10', () => {
+      expect(isValidSecondBall('8', '2', 1)).toBe(true)
+    })
+
+    test('should return true for 3+7', () => {
+      expect(isValidSecondBall('7', '3', 1)).toBe(true)
+    })
+
+    test('should return true for 5+5', () => {
+      expect(isValidSecondBall('5', '5', 1)).toBe(true)
+    })
+
+    test('should reject sum > 10', () => {
+      expect(isValidSecondBall('9', '5', 1)).toBe(false)
+    })
+
+    test('should allow spare symbol directly', () => {
+      expect(isValidSecondBall('/', '2', 1)).toBe(true)
+    })
+  })
 })
