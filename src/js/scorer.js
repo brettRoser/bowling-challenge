@@ -221,8 +221,8 @@ if (typeof window !== 'undefined' && typeof jQuery !== 'undefined') {
         }
       }
 
-      // normalize second-ball input: if total pins would equal 10, convert to spare for frames 1-9
-      if (ball === 2 && frame < 10) {
+      // normalize second-ball input: if total pins would equal 10, convert to spare for frames 1-10
+      if (ball === 2 && frame <= 10) {
         const firstRaw = ($table.find(getInputSelector(frame, 1)).val() || '').toString().trim()
         const firstPins = rawToPins(firstRaw)
         const secNum = parseInt(val, 10)
