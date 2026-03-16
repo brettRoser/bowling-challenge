@@ -458,6 +458,11 @@ function clearScorecard () {
     $scorecard.find('input').val('').prop('disabled', false)
     // clear cumulative/frame labels and total labels
     $scorecard.find('td.frameScore label, td.lastFrameScore label, td[rowspan="2"].center label').text('')
+
+    // recompute all games to refresh max score (default 300 when empty)
+    $scorecard.find('table').each(function () {
+      computeScoresForTable($(this))
+    })
   }
 }
 
