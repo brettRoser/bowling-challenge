@@ -87,7 +87,7 @@ function removeGamesFromScorecard (numberOfBowlers, $scorecard) {
   }
 
   if (hasData && typeof window !== 'undefined' && typeof window.confirm === 'function') {
-    const confirmMessage = 'Reducing the number of bowlers will remove data for existing players on games beyond the selected count. Are you sure you want to continue?'
+    const confirmMessage = 'Reducing the number of bowlers will remove data for existing players on games beyond the selected player count. Are you sure you want to continue?'
     if (!window.confirm(confirmMessage)) {
       // revert select to current game count if user cancels
       $('#bowlers').val($tables.length)
