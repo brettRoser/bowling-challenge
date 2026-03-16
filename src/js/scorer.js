@@ -73,6 +73,28 @@ function normalizeScorecardIds () {
 
 function removeGamesFromScorecard (numberOfBowlers, $scorecard) {
   const $tables = $scorecard.find('table')
+
+  // Check for any non-empty inputs in tables that would be deleted
+  let hasData = false
+  for (let i = numberOfBowlers; i < $tables.length; i++) {
+    const $table = $tables.eq(i)
+    if ($table.find('input').filter(function () {
+      return ($(this).val() || '').toString().trim() !== ''
+    }).length > 0) {
+      hasData = true
+      break
+    }
+  }
+
+  if (hasData && typeof window !== 'undefined' && typeof window.confirm === 'function') {
+    const confirmMessage = 'Reducing the number of bowlers will remove data for existing players on games beyond the selected count. Are you sure you want to continue?'
+    if (!window.confirm(confirmMessage)) {
+      // revert select to current game count if user cancels
+      $('#bowlers').val($tables.length)
+      return
+    }
+  }
+
   for (let i = $tables.length; i > numberOfBowlers; i--) {
     $tables.eq(i - 1).remove()
   }
