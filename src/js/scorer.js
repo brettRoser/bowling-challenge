@@ -456,6 +456,10 @@ function clearScorecard () {
     const $scorecard = $('#scorecard')
     // clear inputs and re-enable any disabled inputs (second ball after strike)
     $scorecard.find('input').val('').prop('disabled', false)
+
+    // clear validation marks from invalid entries
+    $scorecard.find('input').css('border', '').removeAttr('title')
+
     // clear cumulative/frame labels and total labels
     $scorecard.find('td.frameScore label, td.lastFrameScore label, td[rowspan="2"].center label').text('')
 
