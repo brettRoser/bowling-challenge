@@ -7,18 +7,21 @@
     </head>
     <body>
         <h3 class="center">Bowling scorecard</h3>
-        <label for="bowlers">Number of bowlers</label>
-        <select name="bowlers" id="bowlers">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-        </select>
-        <a href="javascript:window.print()" class="printLink"><img src="img/printer.png" title="Print" width="30" height="30" /></a>
-        <a href="javascript:clearScorecard()"><img src="img/clear.png" title="Clear" width="30" height="30" /></a>
-        <br /><br />
+        <div class="toolbar">
+            <label for="bowlers">Number of bowlers</label>
+            <select name="bowlers" id="bowlers">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+            <a href="javascript:window.print()" class="printLink"><img src="img/printer.png" title="Print" width="30" height="30" /></a>
+            <a href="javascript:clearScorecard()" class="clearLink"><img src="img/clear.png" title="Clear" width="30" height="30" /></a>
+            <div class="current-date">Date: <span id="currentDate"></span></div>
+        </div>
+        <br />
         <div id="scorecard">
             <table class="game1">
                 <tr>
@@ -96,5 +99,14 @@
                 </tr>
             </table>
         </div>
+        <script>
+            (function () {
+                var today = new Date();
+                var mm = String(today.getMonth() + 1).padStart(2, '0');
+                var dd = String(today.getDate()).padStart(2, '0');
+                var yyyy = today.getFullYear();
+                document.getElementById('currentDate').textContent = mm + '/' + dd + '/' + yyyy;
+            })();
+        </script>
     </body>
 </html>
