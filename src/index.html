@@ -11,7 +11,7 @@
             <label for="bowlers">Number of bowlers</label>
             <select name="bowlers" id="bowlers">
                 <option value="1">1</option>
-                <option value="2">2</option>
+                <option value="2" selected>2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
@@ -107,6 +107,10 @@
                 var yyyy = today.getFullYear();
                 document.getElementById('currentDate').textContent = mm + '/' + dd + '/' + yyyy;
             })();
+
+            $(document).ready(function () {
+                $('#bowlers').val('2').change();
+            });
         </script>
     </body>
 </html>
