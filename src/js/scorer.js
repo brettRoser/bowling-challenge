@@ -6,6 +6,11 @@ if (typeof window !== 'undefined' && typeof jQuery !== 'undefined') {
     // ensure the initial table inputs receive unique IDs/names
     normalizeScorecardIds()
     identifyScoreChangeEvent()
+
+    // initialize scores/max score in empty state
+    $('#scorecard table').each(function () {
+      computeScoresForTable($(this))
+    })
   })
 }
 
@@ -20,6 +25,11 @@ function updatePlayerCountForScorecardEvent () {
     } else {
       removeGamesFromScorecard(numberOfBowlers, $scorecard)
     }
+
+    // Recompute all tables so every game has initial max score / frame state updated
+    $scorecard.find('table').each(function () {
+      computeScoresForTable($(this))
+    })
   })
 }
 
@@ -136,6 +146,8 @@ function computeScoresForTable ($table) {
     return throws.slice(0, count)
   }
 
+  const frameTotals = []
+
   // iterate frames 1..10 and compute frame scores when possible
   for (let frame = 1; frame <= 10; frame++) {
     const b1 = getBallPins(frame, 1)
@@ -178,16 +190,71 @@ function computeScoresForTable ($table) {
 
     if (frameTotal !== null) {
       cumulative += frameTotal
+      frameTotals[frame] = frameTotal
       // show cumulative score up to this frame
       $scoreCell.find('label').text(cumulative)
     } else {
+      frameTotals[frame] = null
       $scoreCell.find('label').text('')
     }
   }
 
   // update total score (last td with rowspan)
-  const $totalLabel = $table.find('td[rowspan="2"].center').find('label')
+  const $totalLabel = $table.find('td[rowspan="2"].center').first().find('label')
   $totalLabel.text(cumulative || '')
+
+  function maxFramePotential (frame) {
+    const b1Raw = ($table.find(getInputSelector(frame, 1)).val() || '').toString().trim()
+    const b1 = rawToPins(b1Raw)
+    const b2Raw = ($table.find(getInputSelector(frame, 2)).val() || '').toString().trim()
+    const b2 = rawToPins(b2Raw, b1Raw)
+    const b3Raw = ($table.find(getInputSelector(frame, 3)).val() || '').toString().trim()
+    const b3 = rawToPins(b3Raw, b2Raw)
+
+    if (frame < 10) {
+      if (b1 === null) return 30
+      if (b1 === 10) return 30
+      if (b2 === null) return 20
+      if (b1 + b2 === 10 || b2Raw === '/') return 20
+      return b1 + b2
+    }
+
+    // 10th frame
+    if (b1 === null) return 30
+    if (b1 === 10) {
+      if (b2 === null) return 30
+      if (b3 === null) {
+        const b2v = Number.isFinite(b2) ? b2 : 10
+        return 10 + b2v + 10
+      }
+      return 10 + (Number.isFinite(b2) ? b2 : 10) + (Number.isFinite(b3) ? b3 : 10)
+    }
+
+    if (b2 === null) return 20
+    if (b1 + b2 === 10 || b2Raw === '/') {
+      if (b3 === null) return 20
+      return 10 + (Number.isFinite(b3) ? b3 : 10)
+    }
+
+    return b1 + b2
+  }
+
+  // compute max possible total from completed and in-progress frame potential
+  let maxPossible = 0
+  for (let frame = 1; frame <= 10; frame++) {
+    if (frameTotals[frame] != null) {
+      maxPossible += frameTotals[frame]
+    } else {
+      maxPossible += maxFramePotential(frame)
+    }
+  }
+
+  maxPossible = Math.min(300, maxPossible)
+
+  const $maxLabel = $table.find('td.maxScore').find('label')
+  if ($maxLabel.length > 0) {
+    $maxLabel.text(maxPossible)
+  }
 }
 
 // Only bind event handlers when in a browser environment
